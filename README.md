@@ -1,6 +1,8 @@
-# php
+[![CircleCI](https://circleci.com/gh/GSA/datagov-deploy-php.svg?style=svg)](https://circleci.com/gh/GSA/datagov-deploy-php)
 
-This role is a work in progress that provides PHP for web applications.
+# datagov-deploy-php
+
+Ansible role for deploying PHP for web applications on the Data.gov platform.
 
 
 ## Usage
