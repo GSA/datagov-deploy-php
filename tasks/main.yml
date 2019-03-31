@@ -1,5 +1,40 @@
 ---
-# Additinal php configs
+- name: Install OS dependencies
+  apt: name={{ packages }} state=present
+  vars:
+    packages:
+      - apt-transport-https  # Ensure https support for apt is installed
+      - unzip  # required for composer
+
+# TODO consider using https://github.com/geerlingguy/ansible-role-php-versions
+- name: Add repository for PHP
+  apt_repository:
+    repo: ppa:ondrej/php
+  register: ppa
+
+- name: Update Apt
+  apt: update_cache=yes
+  when: ppa is changed
+
+- import_role:
+    name: geerlingguy.php
+  tags:
+    - php
+    - provision
+
+- import_role:
+    name: geerlingguy.php-mysql
+  tags:
+    - php
+    - php-mysql
+    - provision
+
+- import_role:
+    name: geerlingguy.php-memcached
+  tags:
+    - php
+    - php-memcached
+    - provision
 
 - name: Configure secure cookie sessions
   copy: >-
@@ -32,10 +67,8 @@
   notify: reload php-fpm
   when: php_fpm_request_terminate_timeout is defined
 
-# TODO this should be done with update-alternatives
 - name: Set default php-cli
-  file:
-    src: /usr/bin/php{{ php_major_minor_version }}
-    dest: /usr/bin/php
-    state: link
+  alternatives:
+    name: php
+    path: /usr/bin/php{{ php_major_minor_version }}
   notify: restart php-fpm
