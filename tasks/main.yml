@@ -17,24 +17,16 @@
   when: ppa is changed
 
 - import_role:
-    name: geerlingguy.php
-  tags:
-    - php
-    - provision
-
-- import_role:
     name: geerlingguy.php-mysql
-  tags:
-    - php
-    - php-mysql
-    - provision
+  vars:
+    php_default_version_debian: "{{ php_major_minor_version }}"
+    php_mysql_package: php{{ php_major_minor_version }}-mysql
 
+# TODO php-memcached depends on geerlingguy.php so it is run twice, once for mysql, once for memcached
 - import_role:
     name: geerlingguy.php-memcached
-  tags:
-    - php
-    - php-memcached
-    - provision
+  vars:
+    php_default_version_debian: "{{ php_major_minor_version }}"
 
 - name: Configure secure cookie sessions
   copy: >-
