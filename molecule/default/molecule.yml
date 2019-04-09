@@ -24,7 +24,8 @@ scenario:
     - create
     - prepare
     - converge
-    # - idempotence  # to fix
+    # - idempotence
+    - side_effect
     - verify
     - destroy
 verifier:
