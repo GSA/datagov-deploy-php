@@ -7,3 +7,5 @@
   version: 2.0.2
 - src: geerlingguy.php-mysql
   version: 2.0.2
+- src: geerlingguy.composer
+  version: 1.7.3

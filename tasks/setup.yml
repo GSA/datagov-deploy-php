@@ -9,7 +9,11 @@
 
 # TODO consider using https://github.com/geerlingguy/ansible-role-php-versions
 - name: Add repository for PHP
-  apt_repository: repo=ppa:ondrej/php update_cache=yes state=present
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    update_cache: yes
+    state: present
+    codename: '{{ ansible_distribution_release }}'
 
 - name: create php app user
   user: name={{ php_app_user }} home={{ php_app_home }} system=yes state=present comment="a php application"
@@ -28,6 +32,9 @@
     name: geerlingguy.php-memcached
   vars:
     php_default_version_debian: "{{ php_major_minor_version }}"
+
+- import_role:
+    name: geerlingguy.composer
 
 - name: Configure secure cookie sessions
   copy: >-
