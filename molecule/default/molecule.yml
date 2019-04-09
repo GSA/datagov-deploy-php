@@ -6,14 +6,28 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: php-fixes-trusty
+  - name: php-trusty
     image: ubuntu:trusty
-  - name: php-fixes-bionic
+  - name: php-bionic
     image: ubuntu:bionic
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
+scenario:
+  name: default
+  test_sequence:
+    - lint
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - side_effect
+    - verify
+    - destroy
 verifier:
   name: testinfra
   lint:

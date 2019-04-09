@@ -3,6 +3,14 @@
 php_cli_max_execution_time: 600
 php_cli_memory_limit: 2048M
 
+php_app_user: php-app
+php_app_deploy_version: "{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
+php_app_home: /home/{{ php_app_user }}
+php_app_deployments_to_retain: 1
+php_app_version: master
+php_app_git_version: "{{ php_app_version }}"
+php_app_supervisor_programs: []
+
 # Name of the PHP FPM service
 php_fpm_service_name: php{{ php_major_minor_version }}-fpm
 

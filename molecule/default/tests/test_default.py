@@ -5,7 +5,9 @@ import testinfra.utils.ansible_runner
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
-PHP_VERSION = "7.0"
+PHP_VERSION = "7.2"
+app_user = 'myapp'
+deployment_version = '20190308132800'
 
 
 def test_hosts_file(host):
@@ -40,3 +42,13 @@ def test_php_fpm_conf(host):
 
     assert conf.exists
     assert conf.contains('max_execution_time = %s' % max_execution_time)
+
+
+def test_app_home(host):
+    home = host.file('/home/%s' % app_user)
+
+    assert home.exists
+    assert home.is_directory
+    assert home.user == app_user
+    assert home.group == app_user
+    assert home.mode == 0o755

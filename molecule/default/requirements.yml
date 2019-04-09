@@ -3,3 +3,9 @@
   version: 2.6.2
 - src: geerlingguy.php
   version: 3.7.0
+- src: geerlingguy.php-memcached
+  version: 2.0.2
+- src: geerlingguy.php-mysql
+  version: 2.0.2
+- src: geerlingguy.composer
+  version: 1.7.3

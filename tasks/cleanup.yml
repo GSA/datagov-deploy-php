@@ -1,0 +1,7 @@
+---
+# TODO can this be done idempotently?
+- name: Remove previous deployments past retention
+  shell: ls -1dt {{ php_app_home }}/deployments/* | tail -n +{{ php_app_deployments_to_retain | int + 1 }} | xargs rm -rf
+  when: php_app_deployments_to_retain > 0
+  tags:
+    - skip_ansible_lint
