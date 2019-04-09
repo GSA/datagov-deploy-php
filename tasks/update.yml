@@ -1,11 +1,11 @@
 ---
 - name: fetch the php app into src dir
-  git:
-    repo: "{{ php_app_git_repo }}"
-    dest: "{{ php_app_deployment_dir }}/src"
-    version: "{{ php_app_git_version }}"
-    depth: 1
-    umask: 0022
+  git: >-
+    repo={{ php_app_git_repo }}
+    dest={{ php_app_deployment_dir }}/src
+    version={{ php_app_git_version }}
+    depth=1
+    umask=0022
   become: yes
   become_user: "{{ php_app_user }}"
 
