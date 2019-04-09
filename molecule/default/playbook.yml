@@ -4,7 +4,7 @@
   roles:
     - role: datagov-deploy-php
       vars:
-        php_app_usr: myapp
+        php_app_user: myapp
         php_app_git_repo: https://github.com/GSA/project-open-data-dashboard.git
         php_app_deployment_version: '20190308132800'
         php_major_minor_version: "7.2"
