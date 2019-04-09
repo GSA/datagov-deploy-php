@@ -1,2 +1,2 @@
 ---
-# vars file for datagov-deploy-php
+php_app_deployment_dir: "{{ php_app_home }}/deployments/{{ php_app_deploy_version }}"

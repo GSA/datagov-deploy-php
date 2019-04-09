@@ -1,66 +1,25 @@
 ---
-- name: Install OS dependencies
-  apt: name={{ packages }} state=present
-  vars:
-    packages:
-      - apt-transport-https  # Ensure https support for apt is installed
-      - unzip  # required for composer
+- name: check php_app_user
+  fail:
+    msg: php_app_user must be defined
+  when: php_app_user is undefined
 
-# TODO consider using https://github.com/geerlingguy/ansible-role-php-versions
-- name: Add repository for PHP
-  apt_repository:
-    repo: ppa:ondrej/php
-  register: ppa
+- name: check php_app_git_repo
+  fail:
+    msg: php_app_git_repo must be defined
+  when: php_app_git_repo is undefined
 
-- name: Update Apt
-  apt: update_cache=yes
-  when: ppa is changed
+- name: Setup tasks
+  include_tasks: setup.yml
 
-- import_role:
-    name: geerlingguy.php-mysql
-  vars:
-    php_default_version_debian: "{{ php_major_minor_version }}"
-    php_mysql_package: php{{ php_major_minor_version }}-mysql
+- name: Update tasks
+  include_tasks: update.yml
 
-# TODO php-memcached depends on geerlingguy.php so it is run twice, once for mysql, once for memcached
-- import_role:
-    name: geerlingguy.php-memcached
-  vars:
-    php_default_version_debian: "{{ php_major_minor_version }}"
+- name: Install tasks
+  include_tasks: install.yml
 
-- name: Configure secure cookie sessions
-  copy: >-
-    src=php_fpm_session.ini
-    dest=/etc/php/{{ php_major_minor_version }}/fpm/conf.d/90-session.ini
-    mode=0644
-    owner=root
-    group=root
-  notify: reload php-fpm
+- name: Link (activate) tasks
+  include_tasks: link.yml
 
-# This is mostly for dashboard
-- name: Configure cli for long-running worker jobs
-  template: >-
-    src=php_cli_worker.ini.j2
-    dest=/etc/php/{{ php_major_minor_version }}/cli/conf.d/90-worker.ini
-    mode=0644
-    owner=root
-    group=root
-  notify: reload php-fpm
-
-- name: Configure php-fpm pool
-  lineinfile:
-    dest: "/etc/php/{{ php_major_minor_version }}/fpm/pool.d/www.conf"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - regexp: "^.?request_terminate_timeout.?=.+$"
-      line: "request_terminate_timeout={{ php_fpm_request_terminate_timeout }}"
-  notify: reload php-fpm
-  when: php_fpm_request_terminate_timeout is defined
-
-- name: Set default php-cli
-  alternatives:
-    name: php
-    path: /usr/bin/php{{ php_major_minor_version }}
-  notify: restart php-fpm
+- name: Cleanup tasks
+  include_tasks: cleanup.yml

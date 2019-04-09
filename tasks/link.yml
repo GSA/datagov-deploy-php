@@ -1,0 +1,8 @@
+---
+- name: link (activate) the deployment
+  file: >-
+    src={{ php_app_deployment_dir }}
+    dest={{ php_app_home }}/current
+    owner={{ php_app_user }}
+    group={{ php_app_user }}
+    state=link
