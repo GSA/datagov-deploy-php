@@ -1,4 +1,12 @@
 ---
+- name: create secretes directory
+  file: >-
+    dest={{ php_app_deployment_dir }}/secrets
+    owner={{ php_app_user }}
+    group={{ php_app_user }}
+    mode=0750
+    state=directory
+
 - name: create env secrets file
   template: >-
     src={{ php_app_env_secrets_template }}
